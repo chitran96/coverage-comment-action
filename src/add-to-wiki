@@ -10,10 +10,12 @@ stdin="$(cat -)"
 repo_name="${1}"
 filename="${2}"
 commit_message="${3}"
+server_url=${GITHUB_SERVER_URL#http://}
+server_url=${server_url#https://}
 dir="$(mktemp -d)"
 cd $dir
 
-git clone "https://x-access-token:${GITHUB_TOKEN}@github.com/${repo_name}.wiki.git" .
+git clone "https://x-access-token:${GITHUB_TOKEN}@${server_url}/${repo_name}.wiki.git" .
 echo $stdin > "${filename}"
 
 git add "${filename}"
