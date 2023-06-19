@@ -12,6 +12,7 @@ on:
   push:
     branches:
       - v1
+      - github-enterprise
 
 jobs:
   push_to_registry:
