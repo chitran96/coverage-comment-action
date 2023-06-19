@@ -16,6 +16,7 @@ dir="$(mktemp -d)"
 cd $dir
 
 git clone "https://x-access-token:${GITHUB_TOKEN}@${server_url}/${repo_name}.git" .
+git checkout ${GITHUB_HEAD_REF}
 
 mkdir -p resources
 echo $stdin > "resources/${filename}"
@@ -29,7 +30,7 @@ then
     git config --global user.name "Coverage Comment Action"
     git commit -m "$commit_message"
 
-    git push -u origin
+    git push -u origin ${GITHUB_HEAD_REF}
 else
     echo "No change detected, skipping."
 fi
