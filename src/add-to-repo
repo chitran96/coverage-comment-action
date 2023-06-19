@@ -6,6 +6,8 @@
 
 set -eux
 
+env
+
 stdin="$(cat -)"
 repo_name="${1}"
 filename="${2}"
@@ -16,7 +18,7 @@ dir="$(mktemp -d)"
 cd $dir
 
 git clone "https://x-access-token:${GITHUB_TOKEN}@${server_url}/${repo_name}.git" .
-git checkout ${GITHUB_HEAD_REF}
+git checkout ${GITHUB_REF_NAME}
 
 mkdir -p resources
 echo $stdin > "resources/${filename}"
@@ -30,7 +32,7 @@ then
     git config --global user.name "Coverage Comment Action"
     git commit -m "$commit_message"
 
-    git push -u origin ${GITHUB_HEAD_REF}
+    git push -u origin ${GITHUB_REF_NAME}
 else
     echo "No change detected, skipping."
 fi
