@@ -1,0 +1,35 @@
+#!/bin/bash
+# Usage $0 {owner/repo} {filename} {commit_message}
+# Stores the content of stdin in a file named {filename} in the resource directory of
+# the provided repo
+# Reads envvar GITHUB_TOKEN
+
+set -eux
+
+stdin="$(cat -)"
+repo_name="${1}"
+filename="${2}"
+commit_message="${3}"
+server_url=${GITHUB_SERVER_URL#http://}
+server_url=${server_url#https://}
+dir="$(mktemp -d)"
+cd $dir
+
+git clone "https://x-access-token:${GITHUB_TOKEN}@${server_url}/${repo_name}.git" .
+
+mkdir -p resources
+echo $stdin > "resources/${filename}"
+
+
+git add "resources/${filename}"
+
+if ! git diff --staged --exit-code
+then
+    git config --global user.email "coverage-comment-action"
+    git config --global user.name "Coverage Comment Action"
+    git commit -m "$commit_message"
+
+    git push -u origin
+else
+    echo "No change detected, skipping."
+fi
