@@ -20,11 +20,10 @@ cd $dir
 git clone "https://x-access-token:${GITHUB_TOKEN}@${server_url}/${repo_name}.git" .
 git checkout ${GITHUB_HEAD_REF}
 
-mkdir -p resources
-echo $stdin > "resources/${filename}"
+echo $stdin > "${filename}"
 
 
-git add "resources/${filename}"
+git add "${filename}"
 
 if ! git diff --staged --exit-code
 then

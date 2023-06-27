@@ -30,6 +30,7 @@ def main():
         print(f"Commenting on the coverage on PR {config.GITHUB_PR_NUMBER}")
         diff_coverage_info = get_diff_coverage_info(config=config)
         previous_coverage_rate = get_previous_coverage_rate(config=config)
+        previous_coverage_rate = previous_coverage_rate if previous_coverage_rate else get_previous_coverage_rate_from_repo(gh, config)
 
         comment = get_markdown_comment(
             coverage_info=coverage_info,
@@ -261,7 +262,11 @@ def get_previous_coverage_rate(config: Config) -> Optional[float]:
     except Exception:
         print("Previous coverage results not found, cannot report on evolution.")
         return None
-
+    
+def get_previous_coverage_rate_from_repo(gh: github.Github, config: Config) -> Optional[float]:
+    repo = gh.get_repo(config.GITHUB_REPOSITORY)
+    file = repo.get_contents(config.BADGE_FILENAME)
+    return float(json.loads(file.decoded_content)["message"][:-1]) / 100
 
 def upload_badge(badge: str, config: Config) -> None:
     try:
