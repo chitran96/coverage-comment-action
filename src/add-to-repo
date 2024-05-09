@@ -27,8 +27,8 @@ git add "${filename}"
 
 if ! git diff --staged --exit-code
 then
-    git config --global user.email "coverage-comment-action"
-    git config --global user.name "Coverage Comment Action"
+    git config user.name "$(git log -n 1 --pretty=format:%an)"
+    git config user.email "$(git log -n 1 --pretty=format:%ae)"
     git commit -m "$commit_message"
 
     git push -u origin ${GITHUB_HEAD_REF}
