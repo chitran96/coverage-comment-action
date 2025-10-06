@@ -265,7 +265,7 @@ def get_previous_coverage_rate(config: Config) -> Optional[float]:
     
 def get_previous_coverage_rate_from_repo(gh: github.Github, config: Config) -> Optional[float]:
     try:
-    repo = gh.get_repo(config.GITHUB_REPOSITORY)
+        repo = gh.get_repo(config.GITHUB_REPOSITORY)
         file = repo.get_contents(config.BADGE_FILENAME)
         return float(json.loads(file.decoded_content)["message"][:-1]) / 100
     except Exception:
